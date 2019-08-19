@@ -3,7 +3,6 @@ import ReactDOM from "react-dom"
 import { Frame, useMotionValue, useTransform, useAnimation } from "framer"
 import "./styles.css"
 
-// forked
 function Thumb({ up = false, animationProgress, ...props }) {
   const angle0 = up ? 15 : -15
   const angle1 = up ? -40 : 40
@@ -112,6 +111,7 @@ function App() {
       backgroundColor: "#66BB66"
     }
   ]
+  const [likedNames, setLikedNames] = React.useState([])
   return (
     <div className="App">
       <Frame
@@ -120,8 +120,17 @@ function App() {
         background="transparent"
         style={{ zIndex: 1, marginRight: 32 }}
       >
-        {cards.reverse().map(({ image, backgroundColor }) => (
-          <Card key={image} image={image} backgroundColor={backgroundColor} />
+        {cards.reverse().map(({ name, image, backgroundColor }, index) => (
+          <Card
+            key={image}
+            image={image}
+            backgroundColor={backgroundColor}
+            onThumbUp={function() {
+              // spread operator
+              // likedNames.push("Skinny")
+              setLikedNames([...likedNames, name])
+            }}
+          />
         ))}
       </Frame>
       <Frame
@@ -129,9 +138,19 @@ function App() {
         borderRadius={8}
         background="#eee"
         style={{ padding: 8 }}
-      />
+      >
+        {likedNames.map(name => (
+          <div key={name} style={{ marginTop: 8 }}>
+            <span role="img" aria-label="thumb up">
+              👍
+            </span>
+            {name}
+          </div>
+        ))}
+      </Frame>
     </div>
   )
 }
+
 const rootElement = document.getElementById("root")
 ReactDOM.render(<App />, rootElement)
